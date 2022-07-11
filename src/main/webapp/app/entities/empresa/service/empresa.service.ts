@@ -5,10 +5,11 @@ import { Observable } from 'rxjs';
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
-import { IEmpresa, getEmpresaIdentifier } from '../empresa.model';
+import { IEmpresa, getEmpresaIdentifier, Empresa } from '../empresa.model';
 
 export type EntityResponseType = HttpResponse<IEmpresa>;
 export type EntityArrayResponseType = HttpResponse<IEmpresa[]>;
+/* eslint-disable  */
 
 @Injectable({ providedIn: 'root' })
 export class EmpresaService {
@@ -39,6 +40,10 @@ export class EmpresaService {
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  reporte(correo: any, estado: any): Observable<HttpResponse<any>> {
+    return this.http.get(`${this.resourceUrl}/correo/${correo}/${estado}`, { observe: 'response' });
   }
 
   addEmpresaToCollectionIfMissing(empresaCollection: IEmpresa[], ...empresasToCheck: (IEmpresa | null | undefined)[]): IEmpresa[] {

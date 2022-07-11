@@ -4,13 +4,18 @@ import com.mycompany.myapp.domain.Empresa;
 import com.mycompany.myapp.repository.EmpresaRepository;
 import com.mycompany.myapp.service.EmpresaQueryService;
 import com.mycompany.myapp.service.EmpresaService;
+import com.mycompany.myapp.service.MailService;
 import com.mycompany.myapp.service.criteria.EmpresaCriteria;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import io.jsonwebtoken.io.IOException;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.jar.JarException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -40,16 +45,26 @@ public class EmpresaResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    public String cambioDefinitivo;
+
     private final EmpresaService empresaService;
 
     private final EmpresaRepository empresaRepository;
 
     private final EmpresaQueryService empresaQueryService;
 
-    public EmpresaResource(EmpresaService empresaService, EmpresaRepository empresaRepository, EmpresaQueryService empresaQueryService) {
+    private final MailService mailService;
+
+    public EmpresaResource(
+        MailService mailService,
+        EmpresaService empresaService,
+        EmpresaRepository empresaRepository,
+        EmpresaQueryService empresaQueryService
+    ) {
         this.empresaService = empresaService;
         this.empresaRepository = empresaRepository;
         this.empresaQueryService = empresaQueryService;
+        this.mailService = mailService;
     }
 
     /**
@@ -199,5 +214,16 @@ public class EmpresaResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping("/empresas/correo/{correoProveedor}/{estado}")
+    public ResponseEntity<String> correo(@PathVariable String correoProveedor, @PathVariable String estado)
+        throws FileNotFoundException, JarException, IOException, SQLException {
+        String asunto = "Envio de Codificación";
+
+        String contenido = "Su clave cifrada es " + estado;
+        mailService.sendEmail(correoProveedor, asunto, contenido, false, false);
+
+        throw new BadRequestAlertException("Se ha enviado el correo", ENTITY_NAME, "idexists");
     }
 }

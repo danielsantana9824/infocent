@@ -11,6 +11,7 @@ import { ICifrado } from 'app/entities/cifrado/cifrado.model';
 import { CifradoService } from 'app/entities/cifrado/service/cifrado.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 /* eslint-disable no-console */
+/* eslint-disable  */
 
 @Component({
   selector: 'jhi-empresa-update',
@@ -19,7 +20,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class EmpresaUpdateComponent implements OnInit {
   isSaving = false;
   cifradosSharedCollection: ICifrado[] = [];
-  verificaEmail : any;
+  verificaEmail: any;
 
   editForm = this.fb.group({
     id: [],
@@ -59,10 +60,11 @@ export class EmpresaUpdateComponent implements OnInit {
     } else {
       this.subscribeToSaveResponse(this.empresaService.create(empresa));
     }
+
+    this.empresaService.reporte(empresa.email, empresa.cifrado?.cifrado).subscribe((res: HttpResponse<String>) => {});
   }
 
-  verificar(): void{
-    console.log("editForm.valid",this.editForm.valid);
+  verificar(): void {
     this.verificaEmail = this.editForm.valid;
   }
 
@@ -78,7 +80,7 @@ export class EmpresaUpdateComponent implements OnInit {
   }
 
   protected onSaveSuccess(): void {
-    this.previousState();
+    // this.previousState();
   }
 
   protected onSaveError(): void {
@@ -125,6 +127,4 @@ export class EmpresaUpdateComponent implements OnInit {
       cifrado: this.editForm.get(['cifrado'])!.value,
     };
   }
-
-
 }
