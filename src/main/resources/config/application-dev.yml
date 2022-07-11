@@ -48,16 +48,16 @@ spring:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker
   mail:
-    host: mail.itnoroeste.com
+    host:
     port: 587
-    username: daniel.ramirez@itnoroeste.com
-    password: lanegra23
+    username:
+    password:
     protocol: smtp
     tls: true
     properties.mail.smtp:
       auth: true
       starttls.enable: false
-      ssl.trust: mail.itnoroeste.com
+      ssl.trust:
       from: notificaciones@itnoroeste.com
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
